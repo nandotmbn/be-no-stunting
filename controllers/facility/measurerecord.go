@@ -30,7 +30,11 @@ func FacilityMeasureRecord() gin.HandlerFunc {
 		defer cancel()
 
 		c.BindJSON(&record)
-		var idUser = helpers.ValidateToken(helpers.ExtractToken(c))
+		var idUser, err = helpers.ValidateToken(helpers.ExtractToken(c))
+
+		if err != nil {
+			panic(err)
+		}
 		objId, _ := primitive.ObjectIDFromHex(idUser)
 
 		if validationErr := validate.Struct(&record); validationErr != nil {

@@ -26,8 +26,10 @@ func Login() gin.HandlerFunc {
 		c.BindJSON(&inputLogin)
 
 		var resultLogin models.User
+		var finalUserView views.UserNoPassword
 		result := userCollection.FindOne(ctx, bson.M{"identifier": inputLogin.Identifier})
 		result.Decode(&resultLogin)
+		result.Decode(&finalUserView)
 		err := bcrypt.CompareHashAndPassword([]byte(resultLogin.Password), []byte(inputLogin.Password))
 		if err != nil {
 			c.JSON(http.StatusBadRequest, bson.M{
@@ -48,16 +50,17 @@ func Login() gin.HandlerFunc {
 			c.JSON(http.StatusInternalServerError,
 				bson.M{
 					"Status":  http.StatusInternalServerError,
-					"Message": "Internel Server Error",
+					"Message": "Internal Server Error",
 				},
 			)
+			return
 		}
 
 		c.JSON(http.StatusOK,
 			bson.M{
 				"Status":  http.StatusOK,
 				"Message": "Success",
-				"Data":    resultLogin,
+				"Data":    finalUserView,
 				"Token":   jwtResult,
 			},
 		)

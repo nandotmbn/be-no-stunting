@@ -33,7 +33,11 @@ func FacilityMonitorRecord() gin.HandlerFunc {
 		defer cancel()
 
 		c.BindJSON(&monitor)
-		var idUser = helpers.ValidateToken(helpers.ExtractToken(c))
+		var idUser, err = helpers.ValidateToken(helpers.ExtractToken(c))
+
+		if err != nil {
+			panic(err)
+		}
 
 		if validationErr := validate.Struct(&monitor); validationErr != nil {
 			errorMessages := []string{}
@@ -47,8 +51,8 @@ func FacilityMonitorRecord() gin.HandlerFunc {
 
 		objId, _ := primitive.ObjectIDFromHex(idUser)
 
-		err := userCollection.FindOne(ctx, bson.M{"_id": objId}).Decode(&user)
-		if err != nil {
+		err__ := userCollection.FindOne(ctx, bson.M{"_id": objId}).Decode(&user)
+		if err__ != nil {
 			c.JSON(http.StatusInternalServerError, views.MasterResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
 			return
 		}

@@ -32,12 +32,16 @@ func FacilityMeasureFindGet() gin.HandlerFunc {
 		defer cancel()
 		var paramName = c.Query("name")
 
-		var idUser = helpers.ValidateToken(helpers.ExtractToken(c))
+		var idUser, err = helpers.ValidateToken(helpers.ExtractToken(c))
+
+		if err != nil {
+			panic(err)
+		}
 
 		var childRole views.RolesWithId
 
-		err := rolesCollection.FindOne(ctx, bson.M{"name": "Child"}).Decode(&childRole)
-		if err != nil {
+		__err := rolesCollection.FindOne(ctx, bson.M{"name": "Child"}).Decode(&childRole)
+		if __err != nil {
 			c.JSON(http.StatusInternalServerError, views.MasterResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
 			return
 		}

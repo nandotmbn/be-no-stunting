@@ -30,7 +30,12 @@ func FacilityMonitorRetrive() gin.HandlerFunc {
 		var paramChecked = c.Query("checked")
 		var paramType = c.Query("type")
 		var paramTime = c.Query("datetime")
-		var idUserString = helpers.ValidateToken(helpers.ExtractToken(c))
+		var idUserString, err = helpers.ValidateToken(helpers.ExtractToken(c))
+		fmt.Println(idUserString)
+
+		if err != nil {
+			panic(err)
+		}
 		idUser, err := primitive.ObjectIDFromHex(idUserString)
 		if err != nil {
 			panic(err)
@@ -85,6 +90,9 @@ func FacilityMonitorRetrive() gin.HandlerFunc {
 			{
 				Key: "$match", Value: bson.M{"patientid": bson.M{"$in": user}},
 			},
+		}
+		if paramChecked == "" {
+			paramChecked = "false"
 		}
 
 		boolValue, err := strconv.ParseBool(paramChecked)

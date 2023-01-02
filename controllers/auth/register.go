@@ -57,7 +57,11 @@ func Register() gin.HandlerFunc {
 			return
 		}
 
-		var idUser = helpers.ValidateToken(helpers.ExtractToken(c))
+		var idUser, err = helpers.ValidateToken(helpers.ExtractToken(c))
+
+		if err != nil {
+			panic(err)
+		}
 
 		var userAccount views.UserNoPassword
 		accountUserId, _ := primitive.ObjectIDFromHex(idUser)
