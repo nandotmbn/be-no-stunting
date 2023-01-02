@@ -15,6 +15,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -33,7 +34,13 @@ func FacilityMeasureRecord() gin.HandlerFunc {
 		var idUser, err = helpers.ValidateToken(helpers.ExtractToken(c))
 
 		if err != nil {
-			panic(err)
+			c.JSON(http.StatusInternalServerError,
+				bson.M{
+					"Status":  http.StatusInternalServerError,
+					"Message": "Internal Server Error",
+				},
+			)
+			return
 		}
 		objId, _ := primitive.ObjectIDFromHex(idUser)
 

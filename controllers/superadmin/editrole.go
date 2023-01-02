@@ -41,7 +41,13 @@ func EditRole() gin.HandlerFunc {
 
 		count, err := rolesCollection.CountDocuments(ctx, filter)
 		if err != nil {
-			panic(err)
+			c.JSON(http.StatusInternalServerError,
+				bson.M{
+					"Status":  http.StatusInternalServerError,
+					"Message": "Internal Server Error",
+				},
+			)
+			return
 		}
 
 		if count >= 2 {

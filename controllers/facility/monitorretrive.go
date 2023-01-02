@@ -31,22 +31,39 @@ func FacilityMonitorRetrive() gin.HandlerFunc {
 		var paramType = c.Query("type")
 		var paramTime = c.Query("datetime")
 		var idUserString, err = helpers.ValidateToken(helpers.ExtractToken(c))
-		fmt.Println(idUserString)
+		defer cancel()
 
 		if err != nil {
-			panic(err)
+			c.JSON(http.StatusInternalServerError,
+				bson.M{
+					"Status":  http.StatusInternalServerError,
+					"Message": "Internal Server Error",
+				},
+			)
+			return
 		}
 		idUser, err := primitive.ObjectIDFromHex(idUserString)
 		if err != nil {
-			panic(err)
+			c.JSON(http.StatusInternalServerError,
+				bson.M{
+					"Status":  http.StatusInternalServerError,
+					"Message": "Internal Server Error",
+				},
+			)
+			return
 		}
 		var user []primitive.ObjectID
 		ojLorem, err := primitive.ObjectIDFromHex("000000000000000000000000")
 		if err != nil {
-			panic(err)
+			c.JSON(http.StatusInternalServerError,
+				bson.M{
+					"Status":  http.StatusInternalServerError,
+					"Message": "Internal Server Error",
+				},
+			)
+			return
 		}
 		user = append(user, ojLorem)
-		defer cancel()
 
 		results, err := userCollection.Find(ctx, bson.M{
 			"$or": []bson.M{
@@ -97,7 +114,13 @@ func FacilityMonitorRetrive() gin.HandlerFunc {
 
 		boolValue, err := strconv.ParseBool(paramChecked)
 		if err != nil {
-			panic(err)
+			c.JSON(http.StatusInternalServerError,
+				bson.M{
+					"Status":  http.StatusInternalServerError,
+					"Message": "Internal Server Error",
+				},
+			)
+			return
 		}
 
 		checkedAgg := bson.D{
@@ -148,7 +171,13 @@ func FacilityMonitorRetrive() gin.HandlerFunc {
 		if len(paramType) > 0 {
 			patientTypeIdConv, err := primitive.ObjectIDFromHex(paramType)
 			if err != nil {
-				panic(err)
+				c.JSON(http.StatusInternalServerError,
+					bson.M{
+						"Status":  http.StatusInternalServerError,
+						"Message": "Internal Server Error",
+					},
+				)
+				return
 			}
 			patientTypeId = patientTypeIdConv
 		}

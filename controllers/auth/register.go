@@ -60,7 +60,13 @@ func Register() gin.HandlerFunc {
 		var idUser, err = helpers.ValidateToken(helpers.ExtractToken(c))
 
 		if err != nil {
-			panic(err)
+			c.JSON(http.StatusInternalServerError,
+				bson.M{
+					"Status":  http.StatusInternalServerError,
+					"Message": "Internal Server Error",
+				},
+			)
+			return
 		}
 
 		var userAccount views.UserNoPassword

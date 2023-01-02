@@ -14,11 +14,11 @@ type InputLogin struct {
 }
 
 type UserNoPassword struct {
-	FirstName  string             `json:"firstname,omitempty" validate:"required,min=3,max=255"`
+	FirstName  string             `json:"firstName,omitempty" validate:"required,min=3,max=255"`
 	Identifier string             `json:"identifier,omitempty" validate:"required,min=3,max=55"`
 	LastName   string             `json:"lastName,omitempty" validate:"required,min=3,max=255"`
-	ParentId   primitive.ObjectID `json:"parentid,omitempty"`
-	RolesId    primitive.ObjectID `json:"rolesid,omitempty" validate:"required"`
+	ParentId   primitive.ObjectID `json:"parentId,omitempty"`
+	RolesId    primitive.ObjectID `json:"rolesId,omitempty" validate:"required"`
 	Id         string             `json:"_id,omitempty" bson:"_id,omitempty"`
 }
 
