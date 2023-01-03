@@ -86,7 +86,7 @@ func Register() gin.HandlerFunc {
 			if targetRolesAccount.Name != "Facility" {
 				c.JSON(http.StatusBadRequest, bson.M{
 					"Status":  http.StatusBadRequest,
-					"Message": "error",
+					"Message": "Anda tidak bisa mendaftarkan akun selain akun dengan jenis akun Fasilitas",
 				})
 				return
 			}
@@ -95,7 +95,7 @@ func Register() gin.HandlerFunc {
 			if !(targetRolesAccount.Name == "Mother" || targetRolesAccount.Name == "Child") {
 				c.JSON(http.StatusBadRequest, bson.M{
 					"Status":  http.StatusBadRequest,
-					"Message": "error",
+					"Message": "Anda tidak bisa mendaftarkan akun selain akun dengan jenis akun Ibu atau Anak",
 				})
 				return
 			}

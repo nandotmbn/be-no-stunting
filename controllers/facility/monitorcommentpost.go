@@ -20,11 +20,10 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-var validate = validator.New()
-var recordCollection *mongo.Collection = configs.GetCollection(configs.DB, "record")
+var commentCollection *mongo.Collection = configs.GetCollection(configs.DB, "comments")
 
 // Retrive single user using by its ID
-func FacilityMeasureRecord() gin.HandlerFunc {
+func FacilityMonitorCommentPost() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		var record models.Record

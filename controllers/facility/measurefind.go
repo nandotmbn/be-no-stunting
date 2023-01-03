@@ -9,7 +9,6 @@ import (
 	viewsFacility "be-no-stunting-v2/views/facility"
 	"context"
 
-	// "fmt"
 	"net/http"
 	"time"
 
@@ -17,7 +16,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
-	// "go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -32,8 +30,18 @@ func FacilityMeasureFindGet() gin.HandlerFunc {
 		defer cancel()
 		var paramName = c.Query("name")
 
-		var idUser, err = helpers.ValidateToken(helpers.ExtractToken(c))
+		var idUserString, err_ = helpers.ValidateToken(helpers.ExtractToken(c))
+		if err_ != nil {
+			c.JSON(http.StatusInternalServerError,
+				bson.M{
+					"Status":  http.StatusInternalServerError,
+					"Message": "Internal Server Error",
+				},
+			)
+			return
+		}
 
+		var idUser, err = primitive.ObjectIDFromHex(idUserString)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError,
 				bson.M{

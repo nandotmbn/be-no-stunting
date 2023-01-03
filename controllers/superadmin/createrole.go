@@ -29,7 +29,7 @@ func CreateRoles() gin.HandlerFunc {
 				errorMessage := fmt.Sprintf("Error on field %s, condition %s = %s", e.Field(), e.ActualTag(), e.Param())
 				errorMessages = append(errorMessages, errorMessage)
 			}
-			c.JSON(http.StatusBadRequest, gin.H{"error": errorMessages})
+			c.JSON(http.StatusBadRequest, gin.H{"message": errorMessages})
 			return
 		}
 

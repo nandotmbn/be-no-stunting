@@ -11,7 +11,7 @@ type Record struct {
 	Weight     int                `json:"weight,omitempty" validate:"required,min=0"`
 	HeartRate  int                `json:"heartrate,omitempty" validate:"required,min=0"`
 	Temp       int                `json:"temp,omitempty" validate:"required,min=0"`
-	ChildId    primitive.ObjectID `json:"childid,omitempty" validate:"required"`
+	PatientId  primitive.ObjectID `json:"patientid,omitempty" validate:"required"`
 	FacilityId primitive.ObjectID `json:"facilityid,omitempty"`
 	CreatedAt  time.Time          `json:"createdat,omitempty" bson:"createdat,omitempty"`
 }

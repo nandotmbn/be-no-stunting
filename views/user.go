@@ -19,7 +19,7 @@ type UserNoPassword struct {
 	LastName   string             `json:"lastName,omitempty" validate:"required,min=3,max=255"`
 	ParentId   primitive.ObjectID `json:"parentId,omitempty"`
 	RolesId    primitive.ObjectID `json:"rolesId,omitempty" validate:"required"`
-	Id         string             `json:"_id,omitempty" bson:"_id,omitempty"`
+	Id         primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
 }
 
 type UserOnlyId struct {
