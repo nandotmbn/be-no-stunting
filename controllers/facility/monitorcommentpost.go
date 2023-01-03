@@ -3,11 +3,12 @@ package controllers
 import (
 	// "be-no-stunting-v2/configs"
 	"be-no-stunting-v2/configs"
-	"be-no-stunting-v2/helpers"
+	// "be-no-stunting-v2/helpers"
 	"be-no-stunting-v2/models"
 	"fmt"
 
 	"be-no-stunting-v2/views"
+	viewsFacility "be-no-stunting-v2/views/facility"
 	"context"
 
 	"net/http"
@@ -26,25 +27,38 @@ var commentCollection *mongo.Collection = configs.GetCollection(configs.DB, "com
 func FacilityMonitorCommentPost() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-		var record models.Record
-		var user views.UserNoPassword
+		// var record models.Record
+		var commentInput viewsFacility.CommentInput
+		// var user views.UserNoPassword
+		var postIdString = c.Param("postId")
+		var patientIdString = c.Param("patientId")
 		defer cancel()
 
-		c.BindJSON(&record)
-		var idUser, err = helpers.ValidateToken(helpers.ExtractToken(c))
+		c.BindJSON(&commentInput)
 
-		if err != nil {
-			c.JSON(http.StatusInternalServerError,
-				bson.M{
-					"Status":  http.StatusInternalServerError,
-					"Message": "Internal Server Error",
-				},
-			)
-			return
-		}
+		// var idUser, err = helpers.ValidateToken(helpers.ExtractToken(c))
+		// if err != nil {
+		// 	c.JSON(http.StatusInternalServerError,
+		// 		bson.M{
+		// 			"Status":  http.StatusInternalServerError,
+		// 			"Message": "Internal Server Error",
+		// 		},
+		// 	)
+		// 	return
+		// }
 
-		objId, _ := primitive.ObjectIDFromHex(idUser)
-		if validationErr := validate.Struct(&record); validationErr != nil {
+		// objId, objIdErr := primitive.ObjectIDFromHex(idUser)
+		// if objIdErr != nil {
+		// 	c.JSON(http.StatusInternalServerError,
+		// 		bson.M{
+		// 			"Status":  http.StatusInternalServerError,
+		// 			"Message": "Internal Server Error",
+		// 		},
+		// 	)
+		// 	return
+		// }
+
+		if validationErr := validate.Struct(&commentInput); validationErr != nil {
 			errorMessages := []string{}
 			for _, e := range validationErr.(validator.ValidationErrors) {
 				errorMessage := fmt.Sprintf("Error on field %s, condition %s = %s", e.Field(), e.ActualTag(), e.Param())
@@ -54,24 +68,67 @@ func FacilityMonitorCommentPost() gin.HandlerFunc {
 			return
 		}
 
-		userCollection.FindOne(ctx, bson.M{"_id": record.PatientId}).Decode(&user)
-
-		if user.ParentId != objId {
-			c.JSON(http.StatusBadRequest, gin.H{"message": "You cannot record unregistered patient"})
+		var postId, errPostId = primitive.ObjectIDFromHex(postIdString)
+		if errPostId != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"message": "PostId is not valid ObjectID"})
 			return
 		}
 
-		newRecord := models.Record{
-			Height:     record.Height,
-			Weight:     record.Weight,
-			HeartRate:  record.HeartRate,
-			Temp:       record.Temp,
-			PatientId:  record.PatientId,
-			FacilityId: objId,
-			CreatedAt:  time.Now(),
+		var patientId, errPatientId = primitive.ObjectIDFromHex(patientIdString)
+		if errPatientId != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"message": "PatientId is not valid ObjectID"})
+			return
 		}
 
-		result, err := recordCollection.InsertOne(ctx, newRecord)
+		countMonitor, errCountMonitor := monitorCollection.CountDocuments(ctx, bson.M{"_id": postId, "patientid": patientId})
+		countRecord, errCountRecord := recordCollection.CountDocuments(ctx, bson.M{"_id": postId, "patientid": patientId})
+		commentCount, errCommentCount := commentCollection.CountDocuments(ctx, bson.M{"postid": postId})
+		if errCountMonitor != nil || errCountRecord != nil || (countMonitor < 1 && countRecord < 1) {
+			c.JSON(http.StatusBadRequest, gin.H{"message": "There is no post by given ID"})
+			return
+		}
+		if errCommentCount != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"message": "Internal Server Error"})
+			return
+		}
+		if commentCount > 0 {
+			update := bson.M{
+				"content": commentInput.Content,
+			}
+
+			updateComment, err := commentCollection.UpdateOne(ctx, bson.M{"postid": postId}, bson.M{"$set": update})
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, views.MasterResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
+				return
+			}
+			c.JSON(http.StatusCreated, updateComment)
+			return
+		}
+
+		newComment := models.Comment{
+			PostId:    postId,
+			Content:   commentInput.Content,
+			CreatedAt: time.Now(),
+		}
+
+		update := bson.M{
+			"ischecked": true,
+		}
+		if countMonitor > 0 {
+			_, err := commentCollection.UpdateOne(ctx, bson.M{"_id": postId}, bson.M{"$set": update})
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, views.MasterResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
+				return
+			}
+		} else if countRecord > 0 {
+			_, err := recordCollection.UpdateOne(ctx, bson.M{"_id": postId}, bson.M{"$set": update})
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, views.MasterResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
+				return
+			}
+		}
+
+		result, err := commentCollection.InsertOne(ctx, newComment)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, views.MasterResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
 			return

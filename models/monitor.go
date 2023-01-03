@@ -7,7 +7,7 @@ import (
 )
 
 type Monitor struct {
-	IsChecked     bool               `json:"ischecked,omitempty"`
+	IsChecked     bool               `json:"ischecked"`
 	PatientTypeId primitive.ObjectID `json:"patienttypeid,omitempty"`
 	PatientId     primitive.ObjectID `json:"patientid,omitempty"`
 	FacilityId    primitive.ObjectID `json:"facilityid,omitempty"`
