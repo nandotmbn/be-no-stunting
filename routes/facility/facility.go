@@ -11,9 +11,11 @@ func FacilityRoute(router *gin.RouterGroup) {
 	router.POST("/facility/measure/record", controllers.FacilityMeasureRecord())
 	router.GET("/facility/measure/patient/:patientId", controllers.FacilityMonitorGetUserData())
 
-	router.GET("/facility/monitor", controllers.FacilityMonitorRetrive())
-	router.GET("/facility/monitor/:patientId", controllers.FacilityMonitorRetriveByID())
-	router.POST("/facility/monitor/:patientId/comment/:postId", controllers.FacilityMonitorCommentPost())
+	router.GET("/facility/monitor/calendar", controllers.FacilityMonitorRetrive())
+	router.GET("/facility/monitor/calendar/:patientId", controllers.FacilityMonitorRetriveByID())
+	router.GET("/facility/monitor/calendar/:patientId/comment/:postId", controllers.FacilityMonitorCommentGet())
+	router.POST("/facility/monitor/calendar/:patientId/comment/:postId", controllers.FacilityMonitorCommentPost())
+	router.GET("/facility/monitor/calendar/:patientId/comment/:postId/check", controllers.FacilityMonitorCheck())
 	// router.POST("/facility/monitor/record", controllers.FacilityMonitorRecord())
 
 	// router.PUT("/master/roles/:roleId", controllers.EditRole())

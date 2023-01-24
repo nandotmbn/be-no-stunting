@@ -111,9 +111,14 @@ func FacilityMonitorRetriveByID() gin.HandlerFunc {
 			return
 		}
 
+		var finalResult views.UserNoPassword
+		result := userCollection.FindOne(ctx, bson.M{"_id": patientId, "parentid": idFacility})
+		result.Decode(&finalResult)
+
 		c.JSON(http.StatusOK, bson.M{
 			"Status":  http.StatusOK,
 			"Message": "success",
+			"User":    finalResult,
 			"Record":  resultRecord,
 			"Monitor": resultMonitor,
 		})

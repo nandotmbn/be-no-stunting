@@ -108,25 +108,32 @@ func FacilityMonitorRetrive() gin.HandlerFunc {
 				Key: "$match", Value: bson.M{"patientid": bson.M{"$in": user}},
 			},
 		}
+
+		checkedAgg := bson.D{}
+
 		if paramChecked == "" {
-			paramChecked = "false"
-		}
-
-		boolValue, err := strconv.ParseBool(paramChecked)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError,
-				bson.M{
-					"Status":  http.StatusInternalServerError,
-					"Message": "Internal Server Error",
+			checkedAgg = bson.D{
+				{
+					Key: "$match", Value: bson.M{},
 				},
-			)
-			return
-		}
+			}
+		} else {
+			boolValue, err := strconv.ParseBool(paramChecked)
+			if err != nil {
+				c.JSON(http.StatusInternalServerError,
+					bson.M{
+						"Status":  http.StatusInternalServerError,
+						"Message": "Internal Server Error",
+					},
+				)
+				return
+			}
 
-		checkedAgg := bson.D{
-			{
-				Key: "$match", Value: bson.M{"ischecked": boolValue},
-			},
+			checkedAgg = bson.D{
+				{
+					Key: "$match", Value: bson.M{"ischecked": boolValue},
+				},
+			}
 		}
 
 		// create group stage
@@ -151,11 +158,12 @@ func FacilityMonitorRetrive() gin.HandlerFunc {
 				return
 			}
 
+			fmt.Println(parsedTime)
+
 			dateAgg = bson.D{
 				{
 					Key: "$match", Value: bson.M{"createdat": bson.M{
 						"$gte": parsedTime,
-						"$lt":  parsedTime.AddDate(0, 0, 1),
 					}},
 				},
 			}
@@ -186,6 +194,14 @@ func FacilityMonitorRetrive() gin.HandlerFunc {
 			{
 				Key: "$match", Value: bson.M{"patienttypeid": patientTypeId},
 			},
+		}
+
+		if paramType == "" {
+			patientTypeAgg = bson.D{
+				{
+					Key: "$match", Value: bson.M{},
+				},
+			}
 		}
 
 		// pass the pipeline to the Aggregate() method

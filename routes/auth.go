@@ -9,4 +9,5 @@ import (
 func AuthRoute(router *gin.RouterGroup) {
 	router.POST("/auth/register", controllers.Register())
 	router.POST("/auth/login", controllers.Login())
+	router.GET("/auth/me/:id", controllers.Me())
 }
