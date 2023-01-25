@@ -17,7 +17,7 @@ import (
 )
 
 // Retrive single user using by its ID
-func FacilityMonitorCheck() gin.HandlerFunc {
+func FacilityMeasureCheck() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		var postIdString = c.Param("postId")
@@ -36,14 +36,14 @@ func FacilityMonitorCheck() gin.HandlerFunc {
 			return
 		}
 
-		countMonitor, errCountMonitor := monitorCollection.CountDocuments(ctx, bson.M{"_id": postId, "patientid": patientId})
+		countMonitor, errCountMonitor := recordCollection.CountDocuments(ctx, bson.M{"_id": postId, "patientid": patientId})
 		if errCountMonitor != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"message": "There is no post by given ID"})
 			return
 		}
 
 		var monitor viewsFacility.FacilityMonitorGet
-		monitorResult := monitorCollection.FindOne(ctx, bson.M{"_id": postId, "patientid": patientId})
+		monitorResult := recordCollection.FindOne(ctx, bson.M{"_id": postId, "patientid": patientId})
 		monitorResult.Decode(&monitor)
 
 		var update primitive.M = bson.M{
@@ -57,7 +57,7 @@ func FacilityMonitorCheck() gin.HandlerFunc {
 		}
 
 		if countMonitor > 0 {
-			_, err := monitorCollection.UpdateOne(ctx, bson.M{"_id": postId}, bson.M{"$set": update})
+			_, err := recordCollection.UpdateOne(ctx, bson.M{"_id": postId}, bson.M{"$set": update})
 			if err != nil {
 				c.JSON(http.StatusInternalServerError, views.MasterResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
 				return

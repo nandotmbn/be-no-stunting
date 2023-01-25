@@ -62,11 +62,18 @@ func FacilityMeasureRecord() gin.HandlerFunc {
 			return
 		}
 
+		var childRole views.RolesWithId
+		rolesCollection.FindOne(ctx, bson.M{"name": "Child"}).Decode(&childRole)
+
+		if user.RolesId != childRole.Id {
+			c.JSON(http.StatusBadRequest, gin.H{"message": "You cannot record patient with role except Child"})
+			return
+		}
+
 		newRecord := models.Record{
+			IsChecked:  false,
 			Height:     record.Height,
 			Weight:     record.Weight,
-			HeartRate:  record.HeartRate,
-			Temp:       record.Temp,
 			PatientId:  record.PatientId,
 			FacilityId: objId,
 			CreatedAt:  time.Now(),
