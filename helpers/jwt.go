@@ -1,7 +1,6 @@
 package helpers
 
 import (
-	"be-no-stunting-v2/configs"
 	"fmt"
 	"strings"
 	"time"
@@ -10,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var jwtKey = []byte(configs.EnvSuperSecret())
+var jwtKey = []byte("orlandosecretkey")
 
 type JWTClaim struct {
 	Id   string    `json:"id"`
