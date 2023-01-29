@@ -7,7 +7,9 @@ import (
 )
 
 func FacilityRoute(router *gin.RouterGroup) {
-	router.GET("/facility/measure/", controllers.FacilityMeasureFindGet())
+	router.GET("/facility/patients", controllers.FacilityPatientRetrive())
+
+	router.GET("/facility/measure", controllers.FacilityMeasureFindGet())
 	router.POST("/facility/measure/record", controllers.FacilityMeasureRecord())
 	router.GET("/facility/measure/patient/:patientId", controllers.FacilityMonitorGetUserData())
 
