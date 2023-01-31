@@ -126,8 +126,8 @@ func Register() gin.HandlerFunc {
 			RolesId:    user.RolesId,
 			ParentId:   accountUserId,
 			Password:   string(bytes),
-			UpdatedAt:  time.Now().UTC(),
-			CreatedAt:  time.Now().UTC(),
+			UpdatedAt:  time.Now(),
+			CreatedAt:  time.Now(),
 		}
 
 		result, err := userCollection.InsertOne(ctx, newUser)
