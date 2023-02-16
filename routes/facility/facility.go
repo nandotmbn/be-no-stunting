@@ -7,6 +7,7 @@ import (
 )
 
 func FacilityRoute(router *gin.RouterGroup) {
+	router.GET("/facility/", controllers.FacilityHome())
 	router.GET("/facility/patients", controllers.FacilityPatientRetrive())
 
 	router.GET("/facility/measure", controllers.FacilityMeasureFindGet())

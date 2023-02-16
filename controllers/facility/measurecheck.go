@@ -64,10 +64,14 @@ func FacilityMeasureCheck() gin.HandlerFunc {
 			}
 		}
 
+		var monitorDone viewsFacility.FacilityMonitorGet
+		monitorResults := recordCollection.FindOne(ctx, bson.M{"_id": postId, "patientid": patientId})
+		monitorResults.Decode(&monitorDone)
+
 		c.JSON(http.StatusOK, bson.M{
 			"Status":  http.StatusOK,
 			"Message": "success",
-			"Data":    monitor,
+			"Data":    monitorDone,
 		})
 	}
 }

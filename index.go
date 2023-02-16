@@ -30,5 +30,5 @@ func main() {
 	routesFacility.FacilityRoute(v1)
 	routesPatient.PatientRoute(v1)
 
-	router.Run(":8080")
+	router.Run("localhost:8080")
 }
