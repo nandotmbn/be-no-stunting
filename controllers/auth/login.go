@@ -35,7 +35,7 @@ func Login() gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, bson.M{
 				"Status":  http.StatusBadRequest,
 				"Message": "Bad request",
-				"Data":    "Password is not valid",
+				"Data":    "Identifier or Password is not valid",
 			})
 			return
 		}
