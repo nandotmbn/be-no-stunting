@@ -24,6 +24,7 @@ func FacilityHome() gin.HandlerFunc {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		// var monitor models.Monitor
 		var user views.UserNoPassword
+		var paramTime = c.Query("datetime")
 		defer cancel()
 
 		var idUser, err = helpers.ValidateToken(helpers.ExtractToken(c))
@@ -46,6 +47,26 @@ func FacilityHome() gin.HandlerFunc {
 				Key: "$match", Value: bson.M{"facilityid": objId},
 			},
 		}
+		var dateAgg primitive.D
+
+		if len(paramTime) < 1 {
+			dateAgg = matchMonitorAgg
+		} else {
+			parsedTime, err := time.Parse(time.RFC3339, paramTime)
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, views.MasterResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
+				return
+			}
+
+			dateAgg = bson.D{
+				{
+					Key: "$match", Value: bson.M{"createdat": bson.M{
+						"$gte": parsedTime,
+					}},
+				},
+			}
+		}
+
 		groupMonitorStage := bson.D{
 			{Key: "$lookup", Value: bson.D{
 				{Key: "from", Value: "users"},
@@ -55,7 +76,8 @@ func FacilityHome() gin.HandlerFunc {
 			},
 			},
 		}
-		cursorMonitor, errCursorMonitor := monitorCollection.Aggregate(ctx, mongo.Pipeline{matchMonitorAgg, groupMonitorStage})
+
+		cursorMonitor, errCursorMonitor := monitorCollection.Aggregate(ctx, mongo.Pipeline{matchMonitorAgg, dateAgg, groupMonitorStage})
 		if errCursorMonitor != nil {
 			c.JSON(http.StatusInternalServerError, views.MasterResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": errCursorMonitor.Error()}})
 			return
@@ -82,7 +104,7 @@ func FacilityHome() gin.HandlerFunc {
 			},
 		}
 
-		cursorRecord, errCursorRecord := recordCollection.Aggregate(ctx, mongo.Pipeline{matchRecordAgg, groupRecordStage})
+		cursorRecord, errCursorRecord := recordCollection.Aggregate(ctx, mongo.Pipeline{matchRecordAgg, dateAgg, groupRecordStage})
 		if errCursorRecord != nil {
 			c.JSON(http.StatusInternalServerError, views.MasterResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": errCursorRecord.Error()}})
 			return
