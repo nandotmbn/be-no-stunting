@@ -52,6 +52,7 @@ type FacilityMonitorFindByIdView struct {
 	CreatedAt time.Time          `json:"createdAt,omitempty" validate:"required,min=3,max=255"`
 	Id        primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
 	PatientId primitive.ObjectID `json:"patientId,omitempty" bson:"patientid,omitempty"`
+	RolesId   primitive.ObjectID `json:"rolesId,omitempty" bson:"rolesid,omitempty"`
 	Patient   []User_            `json:"patient,omitempty"`
 	Content   string             `json:"content,omitempty" validate:"required,min=0"`
 }
