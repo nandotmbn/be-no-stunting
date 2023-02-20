@@ -9,7 +9,7 @@ import (
 type User_ struct {
 	FirstName string             `json:"firstName,omitempty" validate:"required,min=3,max=255"`
 	LastName  string             `json:"lastName,omitempty" validate:"required,min=3,max=255"`
-	RolesId   primitive.ObjectID `json:"ro◘lesId,omitempty" validate:"required"`
+	RolesId   primitive.ObjectID `json:"rolesId,omitempty" validate:"required"`
 }
 
 type UserGetHome struct {
@@ -53,6 +53,7 @@ type FacilityMonitorFindByIdView struct {
 	CreatedAt time.Time          `json:"createdAt,omitempty" validate:"required,min=3,max=255"`
 	Id        primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
 	PatientId primitive.ObjectID `json:"patientId,omitempty" bson:"patientid,omitempty"`
+	RolesId   primitive.ObjectID `json:"rolesId,omitempty" bson:"rolesid,omitempty"`
 	Patient   []User_            `json:"patient,omitempty"`
 	Content   string             `json:"content,omitempty" validate:"required,min=0"`
 }
