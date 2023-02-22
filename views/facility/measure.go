@@ -29,10 +29,8 @@ type FacilityMeasureFindGet struct {
 type FacilityMeasureGet struct {
 	Id         string             `json:"_id,omitempty" bson:"_id,omitempty"`
 	IsChecked  bool               `json:"isChecked"`
-	Height     int                `json:"height,omitempty" validate:"required,min=0"`
-	Weight     int                `json:"weight,omitempty" validate:"required,min=0"`
-	HeartRate  int                `json:"heartRate,omitempty" validate:"required,min=0"`
-	Temp       int                `json:"temp,omitempty" validate:"required,min=0"`
+	Height     float64            `json:"height,omitempty" validate:"required,min=0"`
+	Weight     float64            `json:"weight,omitempty" validate:"required,min=0"`
 	PatientId  primitive.ObjectID `json:"patientId,omitempty"`
 	Patient    []User             `json:"patient,omitempty"`
 	FacilityId primitive.ObjectID `json:"facilityId,omitempty"`
@@ -63,10 +61,8 @@ type FacilityRecordFindById struct {
 	IsChecked  bool               `json:"isChecked"`
 	Patient    []User_            `json:"patient,omitempty"`
 	PatientId  primitive.ObjectID `json:"patientId,omitempty" bson:"patientid,omitempty"`
-	Height     int                `json:"height,omitempty" validate:"required,min=0"`
-	Weight     int                `json:"weight,omitempty" validate:"required,min=0"`
-	HeartRate  int                `json:"heartRate,omitempty" validate:"required,min=0"`
-	Temp       int                `json:"temp,omitempty" validate:"required,min=0"`
+	Height     float64            `json:"height,omitempty" validate:"required,min=0"`
+	Weight     float64            `json:"weight,omitempty" validate:"required,min=0"`
 	FacilityId primitive.ObjectID `json:"facilityId,omitempty"`
 	CreatedAt  time.Time          `json:"createdAt,omitempty" bson:"createdat,omitempty"`
 }
@@ -76,10 +72,8 @@ type FacilityRecordHome struct {
 	IsChecked  bool               `json:"isChecked"`
 	Patient    []UserGetHome      `json:"patient,omitempty"`
 	PatientId  primitive.ObjectID `json:"patientId,omitempty" bson:"patientid,omitempty"`
-	Height     int                `json:"height,omitempty" validate:"required,min=0"`
-	Weight     int                `json:"weight,omitempty" validate:"required,min=0"`
-	HeartRate  int                `json:"heartRate,omitempty" validate:"required,min=0"`
-	Temp       int                `json:"temp,omitempty" validate:"required,min=0"`
+	Height     float64            `json:"height,omitempty" validate:"required,min=0"`
+	Weight     float64            `json:"weight,omitempty" validate:"required,min=0"`
 	FacilityId primitive.ObjectID `json:"facilityId,omitempty"`
 	CreatedAt  time.Time          `json:"createdAt,omitempty" bson:"createdat,omitempty"`
 }
