@@ -12,6 +12,7 @@ func FacilityRoute(router *gin.RouterGroup) {
 
 	router.GET("/facility/measure", controllers.FacilityMeasureFindGet())
 	router.POST("/facility/measure/record", controllers.FacilityMeasureRecord())
+	router.DELETE("/facility/measure/record/:record_id", controllers.FacilityMeasureDelete())
 	router.GET("/facility/measure/patient/:patientId", controllers.FacilityMonitorGetUserData())
 
 	router.GET("/facility/monitor/calendar", controllers.FacilityMonitorRetrive())
