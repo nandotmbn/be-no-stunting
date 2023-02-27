@@ -8,4 +8,5 @@ import (
 
 func MotherRoute(router *gin.RouterGroup) {
 	router.GET("/mother/", controllers.MotherHome())
+	router.GET("/mother/calendar", controllers.MotherCalendar())
 }
