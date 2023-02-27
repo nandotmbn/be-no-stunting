@@ -4,6 +4,7 @@ import (
 	"be-no-stunting-v2/configs"
 	routes "be-no-stunting-v2/routes"
 	routesFacility "be-no-stunting-v2/routes/facility"
+	routesMother "be-no-stunting-v2/routes/mother"
 	routesPatient "be-no-stunting-v2/routes/patient"
 	routesSuperAdmin "be-no-stunting-v2/routes/superadmin"
 
@@ -29,6 +30,7 @@ func main() {
 	// Screen Level Route
 	routesFacility.FacilityRoute(v1)
 	routesPatient.PatientRoute(v1)
+	routesMother.MotherRoute(v1)
 
 	router.Run(":8080")
 }
