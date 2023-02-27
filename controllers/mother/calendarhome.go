@@ -4,6 +4,7 @@ import (
 	// "be-no-stunting-v2/configs"
 
 	"be-no-stunting-v2/helpers"
+	"fmt"
 
 	"be-no-stunting-v2/views"
 	viewsFacility "be-no-stunting-v2/views/facility"
@@ -57,7 +58,17 @@ func MotherCalendar() gin.HandlerFunc {
 			},
 		}
 
-		cursorMonitor, errCursorMonitor := monitorCollection.Aggregate(ctx, mongo.Pipeline{matchMonitorAgg, groupMonitorStage})
+		groupStage := bson.D{
+			{Key: "$lookup", Value: bson.D{
+				{Key: "from", Value: "comments"},
+				{Key: "as", Value: "comment"},
+				{Key: "localField", Value: "_id"},
+				{Key: "foreignField", Value: "postid"},
+			},
+			},
+		}
+
+		cursorMonitor, errCursorMonitor := monitorCollection.Aggregate(ctx, mongo.Pipeline{matchMonitorAgg, groupStage, groupMonitorStage})
 		if errCursorMonitor != nil {
 			c.JSON(http.StatusInternalServerError, views.MasterResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": errCursorMonitor.Error()}})
 			return
@@ -68,6 +79,8 @@ func MotherCalendar() gin.HandlerFunc {
 			c.JSON(http.StatusInternalServerError, views.MasterResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": errCursorMonitor.Error()}})
 			return
 		}
+
+		fmt.Println(resultMonitor)
 
 		c.JSON(http.StatusOK, bson.M{
 			"Status":  http.StatusOK,

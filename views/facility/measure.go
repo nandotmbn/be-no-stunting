@@ -6,6 +6,10 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+type Comment struct {
+	Content string `json:"content,omitempty" validate:"required,min=0"`
+}
+
 type User_ struct {
 	FirstName string             `json:"firstName,omitempty" validate:"required,min=3,max=255"`
 	LastName  string             `json:"lastName,omitempty" validate:"required,min=3,max=255"`
@@ -53,6 +57,7 @@ type FacilityMonitorFindByIdView struct {
 	PatientId primitive.ObjectID `json:"patientId,omitempty" bson:"patientid,omitempty"`
 	RolesId   primitive.ObjectID `json:"rolesId,omitempty" bson:"rolesid,omitempty"`
 	Patient   []User_            `json:"patient,omitempty"`
+	Comment   []Comment          `json:"comment"`
 	Content   string             `json:"content,omitempty" validate:"required,min=0"`
 }
 
