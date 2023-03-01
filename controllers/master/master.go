@@ -41,19 +41,6 @@ func GetMasterData() gin.HandlerFunc {
 			roles = append(roles, singleRoles)
 		}
 
-		// values := bson.M{
-		// 	"data1": 88,
-		// 	"data2": 77,
-		// }
-
-		// json_data, err__ := json.Marshal(values)
-		// if err__ != nil {
-		// 	log.Fatal("FUCJK")
-		// }
-
-		// testRequest, _ := http.Post("https://gdsc-pens-iot-listener-lxz6xwlfka-et.a.run.app/no-stunting/8890", "application/json", bytes.NewBuffer(json_data))
-		// fmt.Println(testRequest)
-
 		c.JSON(http.StatusOK,
 			bson.M{
 				"Status":  http.StatusOK,

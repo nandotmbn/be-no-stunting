@@ -19,7 +19,7 @@ import (
 )
 
 // Retrive single user using by its ID
-func MotherCalendar() gin.HandlerFunc {
+func ChildMeasure() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		// var monitor models.Monitor
@@ -83,7 +83,7 @@ func MotherCalendar() gin.HandlerFunc {
 			"Status":  http.StatusOK,
 			"Message": "success",
 			"Data": bson.M{
-				"mother":  user,
+				"child":   user,
 				"monitor": resultMonitor,
 			},
 		})

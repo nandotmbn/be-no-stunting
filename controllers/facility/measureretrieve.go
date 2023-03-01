@@ -155,8 +155,6 @@ func FacilityMeasureRetrive() gin.HandlerFunc {
 				return
 			}
 
-			fmt.Println(parsedTime)
-
 			dateAgg = bson.D{
 				{
 					Key: "$match", Value: bson.M{"createdat": bson.M{
