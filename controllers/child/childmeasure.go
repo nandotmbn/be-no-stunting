@@ -41,13 +41,12 @@ func ChildMeasure() gin.HandlerFunc {
 
 		userCollection.FindOne(ctx, bson.M{"_id": objId}).Decode(&user)
 
-		matchMonitorAgg := bson.D{
+		matchRecordAgg := bson.D{
 			{
 				Key: "$match", Value: bson.M{"patientid": objId},
 			},
 		}
-
-		groupMonitorStage := bson.D{
+		groupRecordStage := bson.D{
 			{Key: "$lookup", Value: bson.D{
 				{Key: "from", Value: "users"},
 				{Key: "as", Value: "patient"},
@@ -57,25 +56,15 @@ func ChildMeasure() gin.HandlerFunc {
 			},
 		}
 
-		groupStage := bson.D{
-			{Key: "$lookup", Value: bson.D{
-				{Key: "from", Value: "comments"},
-				{Key: "as", Value: "comment"},
-				{Key: "localField", Value: "_id"},
-				{Key: "foreignField", Value: "postid"},
-			},
-			},
-		}
-
-		cursorMonitor, errCursorMonitor := monitorCollection.Aggregate(ctx, mongo.Pipeline{matchMonitorAgg, groupStage, groupMonitorStage})
-		if errCursorMonitor != nil {
-			c.JSON(http.StatusInternalServerError, views.MasterResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": errCursorMonitor.Error()}})
+		cursorRecord, errCursorRecord := recordCollection.Aggregate(ctx, mongo.Pipeline{matchRecordAgg, groupRecordStage})
+		if errCursorRecord != nil {
+			c.JSON(http.StatusInternalServerError, views.MasterResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": errCursorRecord.Error()}})
 			return
 		}
 
-		var resultMonitor []viewsFacility.FacilityMonitorFindByIdView
-		if errCursorMonitor = cursorMonitor.All(ctx, &resultMonitor); errCursorMonitor != nil {
-			c.JSON(http.StatusInternalServerError, views.MasterResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": errCursorMonitor.Error()}})
+		var resultRecord []viewsFacility.FacilityRecordHome
+		if errCursorRecord = cursorRecord.All(ctx, &resultRecord); errCursorRecord != nil {
+			c.JSON(http.StatusInternalServerError, views.MasterResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": errCursorRecord.Error()}})
 			return
 		}
 
@@ -84,7 +73,7 @@ func ChildMeasure() gin.HandlerFunc {
 			"Message": "success",
 			"Data": bson.M{
 				"child":   user,
-				"monitor": resultMonitor,
+				"measure": resultRecord,
 			},
 		})
 	}

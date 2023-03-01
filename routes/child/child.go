@@ -9,5 +9,5 @@ import (
 func ChildRoute(router *gin.RouterGroup) {
 	router.GET("/child/", controllers.ChildHome())
 	router.GET("/child/calendar", controllers.ChildCalendar())
-	// router.GET("/child/measure", controllers.MotherCalendar())
+	router.GET("/child/measure", controllers.ChildMeasure())
 }
