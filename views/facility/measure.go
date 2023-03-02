@@ -80,5 +80,6 @@ type FacilityRecordHome struct {
 	Height     float64            `json:"height,omitempty" validate:"required,min=0"`
 	Weight     float64            `json:"weight,omitempty" validate:"required,min=0"`
 	FacilityId primitive.ObjectID `json:"facilityId,omitempty"`
+	Comment    []Comment          `json:"comment"`
 	CreatedAt  time.Time          `json:"createdAt,omitempty" bson:"createdat,omitempty"`
 }
