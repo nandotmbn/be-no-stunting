@@ -14,7 +14,7 @@ type User struct {
 	Address    string             `json:"address,omitempty" validate:"required,min=3,max=255"`
 	RolesId    primitive.ObjectID `json:"rolesid,omitempty" validate:"required"`
 	ParentId   primitive.ObjectID `json:"parentid,omitempty"`
-	Id         primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
+	Id         string             `json:"id,omitempty" bson:"_id,omitempty"`
 	UpdatedAt  time.Time          `json:"updatedat,omitempty" bson:"updatedat,omitempty"`
 	CreatedAt  time.Time          `json:"createdat,omitempty" bson:"createdat,omitempty"`
 }

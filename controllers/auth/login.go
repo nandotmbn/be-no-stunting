@@ -11,6 +11,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -45,7 +46,7 @@ func Login() gin.HandlerFunc {
 		rolesFindOne := rolesCollection.FindOne(ctx, bson.M{"_id": resultLogin.RolesId})
 		rolesFindOne.Decode(&choosedRoles)
 
-		jwtResult, jwtError := helpers.GenerateJWT(resultLogin.Id.String(), choosedRoles.Name)
+		jwtResult, jwtError := helpers.GenerateJWT(resultLogin.Id, choosedRoles.Name)
 		if jwtError != nil {
 
 			c.JSON(http.StatusInternalServerError,
@@ -69,8 +70,10 @@ func Login() gin.HandlerFunc {
 			return
 		}
 
+		objId, _ := primitive.ObjectIDFromHex(resultLogin.Id)
+
 		newLoginFCM := models.FCMToken{
-			UserId:   resultLogin.Id,
+			UserId:   objId,
 			FCMToken: inputLogin.FCMToken,
 		}
 
