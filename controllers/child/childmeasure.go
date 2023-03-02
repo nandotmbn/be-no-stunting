@@ -56,7 +56,17 @@ func ChildMeasure() gin.HandlerFunc {
 			},
 		}
 
-		cursorRecord, errCursorRecord := recordCollection.Aggregate(ctx, mongo.Pipeline{matchRecordAgg, groupRecordStage})
+		groupStage := bson.D{
+			{Key: "$lookup", Value: bson.D{
+				{Key: "from", Value: "comments"},
+				{Key: "as", Value: "comment"},
+				{Key: "localField", Value: "_id"},
+				{Key: "foreignField", Value: "postid"},
+			},
+			},
+		}
+
+		cursorRecord, errCursorRecord := recordCollection.Aggregate(ctx, mongo.Pipeline{matchRecordAgg, groupStage, groupRecordStage})
 		if errCursorRecord != nil {
 			c.JSON(http.StatusInternalServerError, views.MasterResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": errCursorRecord.Error()}})
 			return
