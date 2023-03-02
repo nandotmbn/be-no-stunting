@@ -15,6 +15,12 @@ type CreateUserViewResponse struct {
 type InputLogin struct {
 	Identifier string `json:"identifier"`
 	Password   string `json:"password"`
+	FCMToken   string `json:"fcmtoken" validate:"required"`
+}
+
+type InputLogout struct {
+	FCMToken string `json:"fcmtoken" validate:"required"`
+	UserId   string `json:"userid" validate:"required"`
 }
 
 type UserNoPassword struct {

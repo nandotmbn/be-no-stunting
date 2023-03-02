@@ -16,6 +16,7 @@ import (
 )
 
 var userCollection *mongo.Collection = configs.GetCollection(configs.DB, "users")
+var fcmtokenCollection *mongo.Collection = configs.GetCollection(configs.DB, "fcmtoken")
 
 func Login() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -44,7 +45,7 @@ func Login() gin.HandlerFunc {
 		rolesFindOne := rolesCollection.FindOne(ctx, bson.M{"_id": resultLogin.RolesId})
 		rolesFindOne.Decode(&choosedRoles)
 
-		jwtResult, jwtError := helpers.GenerateJWT(resultLogin.Id, choosedRoles.Name)
+		jwtResult, jwtError := helpers.GenerateJWT(resultLogin.Id.String(), choosedRoles.Name)
 		if jwtError != nil {
 
 			c.JSON(http.StatusInternalServerError,
@@ -56,12 +57,40 @@ func Login() gin.HandlerFunc {
 			return
 		}
 
+		count, err_ := fcmtokenCollection.CountDocuments(ctx, bson.M{"userid": resultLogin.Id, "fcmtoken": inputLogin.FCMToken})
+
+		if err_ != nil {
+			c.JSON(http.StatusInternalServerError, views.MasterResponse{Status: http.StatusBadRequest, Message: "error", Data: map[string]interface{}{"data": "Internal server error"}})
+			return
+		}
+
+		if count >= 1 {
+			c.JSON(http.StatusBadRequest, views.MasterResponse{Status: http.StatusBadRequest, Message: "error", Data: map[string]interface{}{"data": "This device with this account has been login"}})
+			return
+		}
+
+		newLoginFCM := models.FCMToken{
+			UserId:   resultLogin.Id,
+			FCMToken: inputLogin.FCMToken,
+		}
+
+		resultFCM, err := fcmtokenCollection.InsertOne(ctx, newLoginFCM)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, views.MasterResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
+			return
+		}
+
+		var FCMToken models.FCMToken
+		resultFCMFinal := fcmtokenCollection.FindOne(ctx, bson.M{"_id": resultFCM.InsertedID})
+		resultFCMFinal.Decode(&FCMToken)
+
 		c.JSON(http.StatusOK,
 			bson.M{
-				"Status":  http.StatusOK,
-				"Message": "Success",
-				"Data":    finalUserView,
-				"Token":   jwtResult,
+				"Status":   http.StatusOK,
+				"Message":  "Success",
+				"Data":     finalUserView,
+				"Token":    jwtResult,
+				"FCMToken": FCMToken,
 			},
 		)
 	}
