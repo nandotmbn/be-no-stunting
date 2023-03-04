@@ -93,7 +93,7 @@ func FacilityMonitorRecord() gin.HandlerFunc {
 		}
 
 		var fcmToken []string
-		results, err := fcmtokenCollection.Find(ctx, bson.M{"userid": objId})
+		results, err := fcmtokenCollection.Find(ctx, bson.M{"userid": patient.Id})
 
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, views.MasterResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
