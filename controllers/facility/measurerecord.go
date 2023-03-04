@@ -21,6 +21,7 @@ import (
 )
 
 var validate = validator.New()
+var fcmtokenCollection *mongo.Collection = configs.GetCollection(configs.DB, "fcmtoken")
 var recordCollection *mongo.Collection = configs.GetCollection(configs.DB, "record")
 
 // Retrive single user using by its ID
@@ -84,6 +85,29 @@ func FacilityMeasureRecord() gin.HandlerFunc {
 			c.JSON(http.StatusInternalServerError, views.MasterResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
 			return
 		}
+
+		var fcmToken []string
+		results, err := fcmtokenCollection.Find(ctx, bson.M{"userid": record.PatientId})
+
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, views.MasterResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
+			return
+		}
+
+		defer results.Close(ctx)
+
+		for results.Next(ctx) {
+			var singleRoles models.FCMToken
+			if err = results.Decode(&singleRoles); err != nil {
+				c.JSON(http.StatusInternalServerError, views.MasterResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
+			}
+
+			fcmToken = append(fcmToken, singleRoles.FCMToken)
+		}
+
+		title := fmt.Sprintf("%s %s", user.FirstName, user.LastName)
+
+		helpers.SendToToken(fcmToken, title, "Pengukuran telah dilakukan")
 
 		c.JSON(http.StatusCreated, views.MasterResponse{Status: http.StatusCreated, Message: "success", Data: map[string]interface{}{"data": result}})
 	}

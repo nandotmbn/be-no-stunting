@@ -22,6 +22,8 @@ import (
 
 var monitorCollection *mongo.Collection = configs.GetCollection(configs.DB, "monitor")
 var userCollection *mongo.Collection = configs.GetCollection(configs.DB, "users")
+var fcmtokenCollection *mongo.Collection = configs.GetCollection(configs.DB, "fcmtoken")
+
 var validate = validator.New()
 
 // Retrive single user using by its ID
@@ -30,6 +32,7 @@ func FacilityMonitorRecord() gin.HandlerFunc {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		var monitor models.Monitor
 		var user models.User
+		var patient models.User
 		defer cancel()
 
 		c.BindJSON(&monitor)
@@ -82,6 +85,36 @@ func FacilityMonitorRecord() gin.HandlerFunc {
 			"updatedat": time.Now(),
 		}
 		userCollection.UpdateOne(ctx, bson.M{"_id": objId}, bson.M{"$set": update})
+
+		err___ := userCollection.FindOne(ctx, bson.M{"_id": user.ParentId}).Decode(&patient)
+		if err___ != nil {
+			c.JSON(http.StatusInternalServerError, views.MasterResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
+			return
+		}
+
+		var fcmToken []string
+		results, err := fcmtokenCollection.Find(ctx, bson.M{"userid": objId})
+
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, views.MasterResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
+			return
+		}
+
+		defer results.Close(ctx)
+
+		for results.Next(ctx) {
+			var singleRoles models.FCMToken
+			if err = results.Decode(&singleRoles); err != nil {
+				c.JSON(http.StatusInternalServerError, views.MasterResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
+			}
+
+			fcmToken = append(fcmToken, singleRoles.FCMToken)
+		}
+
+		title := fmt.Sprintf("%s %s", patient.FirstName, patient.LastName)
+		body := fmt.Sprintf("%s %s mengirimkan pencatatan kalender", user.FirstName, user.LastName)
+
+		helpers.SendToToken(fcmToken, title, body)
 
 		c.JSON(http.StatusCreated, views.MasterResponse{Status: http.StatusCreated, Message: "success", Data: map[string]interface{}{"data": result}})
 	}

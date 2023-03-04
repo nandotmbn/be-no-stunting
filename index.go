@@ -18,6 +18,7 @@ func main() {
 	// gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 	configs.ConnectDB()
+	configs.SetupFirebase()
 
 	// Super Admin Route
 	superadmin := router.Group("/superadmin")

@@ -3,6 +3,8 @@ package controllers
 import (
 	// "be-no-stunting-v2/configs"
 	"be-no-stunting-v2/configs"
+	"be-no-stunting-v2/helpers"
+
 	// "be-no-stunting-v2/helpers"
 	"be-no-stunting-v2/models"
 	"fmt"
@@ -77,6 +79,38 @@ func FacilityMonitorCommentPost() gin.HandlerFunc {
 				c.JSON(http.StatusInternalServerError, views.MasterResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
 				return
 			}
+
+			var user models.User
+			err___ := userCollection.FindOne(ctx, bson.M{"_id": patientId}).Decode(&user)
+			if err___ != nil {
+				c.JSON(http.StatusInternalServerError, views.MasterResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
+				return
+			}
+			var fcmToken []string
+			results, err := fcmtokenCollection.Find(ctx, bson.M{"userid": patientId})
+
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, views.MasterResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
+				return
+			}
+
+			defer results.Close(ctx)
+
+			for results.Next(ctx) {
+				var singleRoles models.FCMToken
+				if err = results.Decode(&singleRoles); err != nil {
+					c.JSON(http.StatusInternalServerError, views.MasterResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
+				}
+
+				fcmToken = append(fcmToken, singleRoles.FCMToken)
+			}
+
+			title := fmt.Sprintf("%s %s", user.FirstName, user.LastName)
+
+			print(title)
+
+			helpers.SendToToken(fcmToken, title, "Fasilitas memperbaharui komentar pencatatan kalender")
+
 			c.JSON(http.StatusOK, bson.M{
 				"Status":  http.StatusOK,
 				"Message": "success",
@@ -119,6 +153,37 @@ func FacilityMonitorCommentPost() gin.HandlerFunc {
 			c.JSON(http.StatusInternalServerError, views.MasterResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
 			return
 		}
+
+		var user models.User
+		err___ := userCollection.FindOne(ctx, bson.M{"_id": patientId}).Decode(&user)
+		if err___ != nil {
+			c.JSON(http.StatusInternalServerError, views.MasterResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
+			return
+		}
+		var fcmToken []string
+		results, err := fcmtokenCollection.Find(ctx, bson.M{"userid": patientId})
+
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, views.MasterResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
+			return
+		}
+
+		defer results.Close(ctx)
+
+		for results.Next(ctx) {
+			var singleRoles models.FCMToken
+			if err = results.Decode(&singleRoles); err != nil {
+				c.JSON(http.StatusInternalServerError, views.MasterResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
+			}
+
+			fcmToken = append(fcmToken, singleRoles.FCMToken)
+		}
+
+		title := fmt.Sprintf("%s %s", user.FirstName, user.LastName)
+
+		print(title)
+
+		helpers.SendToToken(fcmToken, title, "Fasilitas mengomentari pencatatan kalender")
 
 		c.JSON(http.StatusOK, bson.M{
 			"Status":  http.StatusOK,
