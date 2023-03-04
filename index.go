@@ -35,5 +35,5 @@ func main() {
 	routesChild.ChildRoute(v1)
 	routesMother.MotherRoute(v1)
 
-	router.Run("localhost:8080")
+	router.Run(":8080")
 }
