@@ -17,4 +17,6 @@ type User struct {
 	Id         string             `json:"id,omitempty" bson:"_id,omitempty"`
 	UpdatedAt  time.Time          `json:"updatedat,omitempty" bson:"updatedat,omitempty"`
 	CreatedAt  time.Time          `json:"createdat,omitempty" bson:"createdat,omitempty"`
+	BornAt     time.Time          `json:"bornat,omitempty" bson:"bornat,omitempty"`
+	IsMale     bool               `json:"ismale"`
 }

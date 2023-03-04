@@ -128,6 +128,8 @@ func Register() gin.HandlerFunc {
 			Password:   string(bytes),
 			UpdatedAt:  time.Now(),
 			CreatedAt:  time.Now(),
+			BornAt:     user.BornAt,
+			IsMale:     user.IsMale,
 		}
 
 		result, err := userCollection.InsertOne(ctx, newUser)

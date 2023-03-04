@@ -27,6 +27,8 @@ type FacilityMeasureFindGet struct {
 	Identifier string             `json:"identifier,omitempty" validate:"required,min=3,max=55"`
 	LastName   string             `json:"lastName,omitempty" validate:"required,min=3,max=255"`
 	UpdatedAt  time.Time          `json:"updatedAt,omitempty" validate:"required,min=3,max=255"`
+	BornAt     time.Time          `json:"bornAt,omitempty" validate:"required,min=3,max=255"`
+	IsMale     bool               `json:"isMale"`
 	Id         primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
 }
 
