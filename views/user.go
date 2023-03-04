@@ -30,9 +30,9 @@ type UserNoPassword struct {
 	LastName   string             `json:"lastName,omitempty" validate:"required,min=3,max=255"`
 	ParentId   primitive.ObjectID `json:"parentId,omitempty"`
 	IsMale     bool               `json:"isMale,omitempty"`
+	BornAt     time.Time          `json:"bornAt,omitempty" bson:"bornat,omitempty"`
 	Address    string             `json:"address,omitempty" validate:"required,min=3,max=255"`
 	RolesId    primitive.ObjectID `json:"rolesId,omitempty" validate:"required"`
-	BornAt     time.Time          `json:"bornAt,omitempty" bson:"bornat,omitempty"`
 	UpdatedAt  time.Time          `json:"updatedat,omitempty" bson:"updatedat,omitempty"`
 }
 
@@ -43,6 +43,8 @@ type UserUpdate struct {
 	ParentId   primitive.ObjectID `json:"parentId,omitempty"`
 	Address    string             `json:"address,omitempty" validate:"required,min=3,max=255"`
 	RolesId    primitive.ObjectID `json:"rolesId,omitempty" validate:"required"`
+	IsMale     bool               `json:"isMale,omitempty"`
+	BornAt     time.Time          `json:"bornAt,omitempty" bson:"bornat,omitempty"`
 }
 
 type UserOnlyId struct {

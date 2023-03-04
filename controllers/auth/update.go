@@ -92,6 +92,8 @@ func Update() gin.HandlerFunc {
 			"address":    user.Address,
 			"rolesid":    user.RolesId,
 			"updatedat":  time.Now(),
+			"bornat":     user.BornAt,
+			"ismale":     user.IsMale,
 		}
 
 		if identifierSameCount == 1 {
