@@ -118,7 +118,6 @@ func FacilityMonitorRecord() gin.HandlerFunc {
 		body := fmt.Sprintf("%s %s mengirimkan pencatatan kalender", user.FirstName, user.LastName)
 
 		if len(fcmToken) != 0 {
-
 			helpers.SendToToken(fcmToken, title, body)
 		}
 

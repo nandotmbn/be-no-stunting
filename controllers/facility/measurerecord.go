@@ -107,7 +107,9 @@ func FacilityMeasureRecord() gin.HandlerFunc {
 
 		title := fmt.Sprintf("%s %s", user.FirstName, user.LastName)
 
-		helpers.SendToToken(fcmToken, title, "Pengukuran telah dilakukan")
+		if len(fcmToken) != 0 {
+			helpers.SendToToken(fcmToken, title, "Pengukuran telah dilakukan")
+		}
 
 		c.JSON(http.StatusCreated, views.MasterResponse{Status: http.StatusCreated, Message: "success", Data: map[string]interface{}{"data": result}})
 	}

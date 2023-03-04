@@ -107,9 +107,9 @@ func FacilityMonitorCommentPost() gin.HandlerFunc {
 
 			title := fmt.Sprintf("%s %s", user.FirstName, user.LastName)
 
-			print(title)
-
-			helpers.SendToToken(fcmToken, title, "Fasilitas memperbaharui komentar pencatatan kalender")
+			if len(fcmToken) != 0 {
+				helpers.SendToToken(fcmToken, title, "Fasilitas memperbaharui komentar pencatatan kalender")
+			}
 
 			c.JSON(http.StatusOK, bson.M{
 				"Status":  http.StatusOK,
@@ -181,9 +181,9 @@ func FacilityMonitorCommentPost() gin.HandlerFunc {
 
 		title := fmt.Sprintf("%s %s", user.FirstName, user.LastName)
 
-		print(title)
-
-		helpers.SendToToken(fcmToken, title, "Fasilitas mengomentari pencatatan kegiatan anda")
+		if len(fcmToken) != 0 {
+			helpers.SendToToken(fcmToken, title, "Fasilitas mengomentari pencatatan kegiatan anda")
+		}
 
 		c.JSON(http.StatusOK, bson.M{
 			"Status":  http.StatusOK,
