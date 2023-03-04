@@ -183,7 +183,7 @@ func FacilityMonitorCommentPost() gin.HandlerFunc {
 
 		print(title)
 
-		helpers.SendToToken(fcmToken, title, "Fasilitas mengomentari pencatatan kalender")
+		helpers.SendToToken(fcmToken, title, "Fasilitas mengomentari pencatatan kegiatan anda")
 
 		c.JSON(http.StatusOK, bson.M{
 			"Status":  http.StatusOK,
