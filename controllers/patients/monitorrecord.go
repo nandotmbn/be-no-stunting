@@ -92,8 +92,9 @@ func FacilityMonitorRecord() gin.HandlerFunc {
 			return
 		}
 
+		objIds, _ := primitive.ObjectIDFromHex(patient.Id)
 		var fcmToken []string
-		results, err := fcmtokenCollection.Find(ctx, bson.M{"userid": patient.Id})
+		results, err := fcmtokenCollection.Find(ctx, bson.M{"userid": objIds})
 
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, views.MasterResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
@@ -108,13 +109,18 @@ func FacilityMonitorRecord() gin.HandlerFunc {
 				c.JSON(http.StatusInternalServerError, views.MasterResponse{Status: http.StatusInternalServerError, Message: "error", Data: map[string]interface{}{"data": err.Error()}})
 			}
 
+			fmt.Println(singleRoles.FCMToken)
+
 			fcmToken = append(fcmToken, singleRoles.FCMToken)
 		}
 
 		title := fmt.Sprintf("%s %s", patient.FirstName, patient.LastName)
 		body := fmt.Sprintf("%s %s mengirimkan pencatatan kalender", user.FirstName, user.LastName)
 
-		helpers.SendToToken(fcmToken, title, body)
+		if len(fcmToken) != 0 {
+
+			helpers.SendToToken(fcmToken, title, body)
+		}
 
 		c.JSON(http.StatusCreated, views.MasterResponse{Status: http.StatusCreated, Message: "success", Data: map[string]interface{}{"data": result}})
 	}
