@@ -1,6 +1,14 @@
 # Back-End No Stunting App
 
+---
+
 This is the source code for the backend development of the No Stunting App.
+
+> The API Documentation for deployed backend system can be seen in
+>
+> [https://documenter.getpostman.com/view/12579961/2s93Jox6Dv](https://documenter.getpostman.com/view/12579961/2s93Jox6Dv)
+
+---
 
 This documentation is divided into three sections, including:
 
@@ -119,9 +127,38 @@ The code is already setup and successfully running. :)
 
 ## How to deploy in Google Cloud
 
-> 1. [Setup Cloud Run](#setup-cloud-run)
-> 2. [Setup Cloud Build](#setup-cloud-build)
+We need to deploy a system for the benefit of flexible access, here we use Google Cloud with it's Cloud Run, **before those**, you need to upload **your setup project** to your own Github.
 
-### Setup Cloud Run
+1. Create Service
 
-### Setup Cloud Build
+    In Cloud Run Main Panel, simply click **Create Service**
+
+    ![image image](/readme/6.PNG)
+
+2. Setup Cloud Build, Sservice name, region, CPU Allocation and Autoscalling
+
+    ![image image](/readme/7.PNG)
+
+    By Clicking **SET UP WITH CLOUD BUILD**, will appear side section Set Up Cloud Build.
+
+    ![image image](/readme/8.PNG)
+
+    Before this, you have already deploy your repository in your Github.
+
+    > If you are new in Google Cloud, you have to configure connection between your Github with Google Cloud.
+
+    ![image image](/readme/9.PNG)
+
+    Simply click **Save**
+
+3. Authentication
+
+    ![image image](/readme/10.PNG)
+
+4. Setup Environment Variable
+
+    Expand Collapsable **Container, Networking, Security**, in Section **Environment variable**, you can input your MONGODB Connection String like picture below:
+
+    ![image image](/readme/11.PNG)
+
+5. Click **CREATE**
