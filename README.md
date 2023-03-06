@@ -1,87 +1,41 @@
 # Back-End No Stunting App
 
-> This app is using
->
-> 1. Golang
-> 2. Gin-Gonic
-> 3. MongoDB
-> 4. Gorilla Websocket
+This is the source code for the backend development of the No Stunting App.
 
-***
+This documentation is divided into three sections, including:
 
-## Authentication
+> 1. [How to clone](#how-to-clone)
+> 2. [How to run on your system](#how-to-run-on-your-system)
+> 3. [How to deploy in Google Cloud](#how-to-deploy-in-google-cloud)
 
-1. Super Admin
-2. Admin
-3. Facility
-4. Mother
-5. Child
+## How to clone
 
-### Super Admin
+Cloning this code requires several requirements, including:
 
-Super admin has fully control of REST-API
+> 1. [Installing Golang](#installing-golang)
+> 2. [Setup MongoDB Atlas](#setup-mongodb-atlas)
+> 3. [Install Dependency](#install-dependency)
 
-### Admin
+### Installing Golang
 
-Admin can control facility, mother and child who registered under its control.
+### Setup MongoDB Atlas
 
-### Facility
+### Install Dependency
 
-Facility can control mother and child who registered under its control.
+## How to run on your system
 
-### Mother
+> 1. [Setup Environment Variables](#setup-environment-variables)
+> 2. [Choose your IP Configuration](#choose-your-ip-configuration)
 
-Mother only be able to control their own monitoring field.
+### Setup Environment Variables
 
-### Child
+### Choose your IP Configuration
 
-Child who is controlled by his/her mother only able to control their own monitoring field.
+## How to deploy in Google Cloud
 
-***
+> 1. [Setup Cloud Run](#setup-cloud-run)
+> 2. [Setup Cloud Build](#setup-cloud-build)
 
-## Dataform on Database Management
+### Setup Cloud Run
 
-### Master
-
-```js
-{
-  Roles: [
-    "Admin",
-    "Facility",
-    "Mom",
-    "Child",
-  ],
-  MonitoringState: [
-    "Not Yet",
-    "Already",
-  ],
-  ChildMonitoringPlace: [
-    "Home",
-    "Facility",
-  ]
-}
-```
-
-### User
-
-```js
-{
-  id: "id",
-  type: "admin" || "facility" || "mother" || "child",
-  firstname: "<First Name>",
-  lastname: "<Last Name>",
-  address: "<User Address>",
-  identifier: "<Admin Identifier>" || "<Facility Registration Number>" || "<Mother NIK>" || "<Child NIK>",
-  profilepictureurl: "<Url Profile Picture>"
-}
-```
-
-### Facility Pictures
-
-```js
-{
-  id: "",
-  facilityid: "<User(Facility) ID>",
-  url: "<Url Facility Picture>"
-}
-```
+### Setup Cloud Build
