@@ -8,19 +8,66 @@ This documentation is divided into three sections, including:
 > 2. [How to run on your system](#how-to-run-on-your-system)
 > 3. [How to deploy in Google Cloud](#how-to-deploy-in-google-cloud)
 
+---
+
 ## How to clone
 
-Cloning this code requires several requirements, including:
+After cloning this repository, you can follow several steps, including:
 
-> 1. [Installing Golang](#installing-golang)
+> 1. [Install Golang](#install-golang)
 > 2. [Setup MongoDB Atlas](#setup-mongodb-atlas)
-> 3. [Install Dependency](#install-dependency)
+> 3. [Install Dependencies](#install-dependencies)
 
-### Installing Golang
+### Install Golang
+
+Installing **Golang** is quite easy, it can be done in several steps, including:
+
+1. Download Golang Install in this [link](https://go.dev/dl/).
+2. Click Install
+3. Proceed as the installation in general.
 
 ### Setup MongoDB Atlas
 
-### Install Dependency
+This project use MongoDB as Database Management System, and use [MongoDB Atlas](https://www.mongodb.com/atlas/database) as DBMS Environment. You can setup the MongoDB Atlas by several steps, but make sure you have account in MongoDB Atlas (It is free), if you don't have account, easily you can register [here](https://www.mongodb.com/cloud/atlas/register).
+
+After you have an account, you can follow the next step, including:
+
+1. Create Cluster
+
+    Choose Cluster do you want and the specification, here for example, you can choose **M0** with free payment, Google Cloud Provider, choose the Region and define the Cluster Name. and Click **Create**.
+
+      ![image image](readme/1.PNG)
+
+2. Create Database Account
+
+    After creating cluster, you need to create user for read and write for any data in your project.
+
+    > my_username can be replaced with your own username
+    > my_password can be replaced with your own password
+
+      ![image image](readme/2.PNG)
+
+3. Add IP Access List
+
+    To allow IP that is connected to database, you can add IP. Here we using `0.0.0.0/0` for allowing all of connection from all IP. Easily click **Add Entry**
+
+      ![image image](readme/3.PNG)
+
+4. Get Connection String
+
+    When you already setup your database, you will be redirected to **Database Deployment**, here, you can click **Connect** button.
+
+      ![image image](readme/4.PNG)
+
+    Choose **Connect your application**, and will appear modal box a modal box will appear more or less like this.
+
+      ![image image](readme/5.PNG)
+
+    Copy the connection string and replace blue sensored text with your username and `<password>` with password you entered before.
+
+### Install Dependencies
+
+---
 
 ## How to run on your system
 
@@ -30,6 +77,8 @@ Cloning this code requires several requirements, including:
 ### Setup Environment Variables
 
 ### Choose your IP Configuration
+
+---
 
 ## How to deploy in Google Cloud
 
