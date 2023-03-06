@@ -77,12 +77,43 @@ Dependencies for projects is an important things, you need to install to your cu
 
 ## How to run on your system
 
+Navigate active directory to your project directory, and you may continue... :)
+
 > 1. [Setup Environment Variables](#setup-environment-variables)
-> 2. [Choose your IP Configuration](#choose-your-ip-configuration)
+> 2. [Run](#run)
 
 ### Setup Environment Variables
 
-### Choose your IP Configuration
+If you see `env.example` in this repository, it is the example ENV file that will be loaded in the runtime. So, the next steps is:
+
+1. Copy `env.example` file to the same directory and give name `.env`.
+2. Open the file, and you will see code like this:
+
+    ```env
+    MONGOURI="YOUR_MONGODB_URI"
+    ```
+
+3. Replace "YOUR_MONGODB_URI" with Connection String you created before.
+
+    ```env
+    MONGOURI=mongodb+srv://<username>:<password>@<clustername>.t46b00s.mongodb.net/?retryWrites=true&w=majority
+    ```
+
+4. Save the file
+
+### Run
+
+To check and make sure the setup is already done, we need to check with trying to run the system, so let us do it! :D
+
+Stay in project directory, run command `go run index.go`
+
+If the last line of the terminal output is:
+
+```bash
+[GIN-debug] Listening and serving HTTP on :8080
+```
+
+The code is already setup and successfully running. :)
 
 ---
 

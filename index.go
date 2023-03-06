@@ -2,6 +2,7 @@ package main
 
 import (
 	"be-no-stunting-v2/configs"
+	"be-no-stunting-v2/helpers"
 	routes "be-no-stunting-v2/routes"
 	routesChild "be-no-stunting-v2/routes/child"
 	routesFacility "be-no-stunting-v2/routes/facility"
@@ -34,6 +35,8 @@ func main() {
 	routesPatient.PatientRoute(v1)
 	routesChild.ChildRoute(v1)
 	routesMother.MotherRoute(v1)
+
+	helpers.RolesSetup()
 
 	router.Run(":8080")
 }
