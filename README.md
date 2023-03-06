@@ -43,6 +43,7 @@ After you have an account, you can follow the next step, including:
     After creating cluster, you need to create user for read and write for any data in your project.
 
     > my_username can be replaced with your own username
+    >
     > my_password can be replaced with your own password
 
       ![image image](readme/2.PNG)
@@ -66,6 +67,11 @@ After you have an account, you can follow the next step, including:
     Copy the connection string and replace blue sensored text with your username and `<password>` with password you entered before.
 
 ### Install Dependencies
+
+Dependencies for projects is an important things, you need to install to your currenct project, simply, in Go we just only :
+
+1. Change your active directory to your cloned directory
+2. Write command `go get`
 
 ---
 
